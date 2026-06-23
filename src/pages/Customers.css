@@ -1,0 +1,117 @@
+.cust {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.cust-head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.cust-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cust-title {
+  font-size: 30px;
+  font-weight: 600;
+}
+
+/* 전체 인원 카운트 칩 */
+.cust-count {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--accent-wash);
+  color: var(--accent-strong);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.cust-count strong {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* 테이블 카드 */
+.cust-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.cust-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cust-table th {
+  text-align: left;
+  padding: 13px 18px;
+  background: #fafbfc;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.cust-table th.num,
+.cust-table td.num {
+  text-align: right;
+}
+
+.cust-table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line-2);
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.cust-row:last-child td {
+  border-bottom: none;
+}
+
+.cust-row {
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+
+.cust-row:hover {
+  background: var(--accent-wash);
+}
+
+/* 데이터는 모노 — 숫자가 이 도구의 재료 */
+.cust-id {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.cust-table td.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.cust-rfm {
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+}
+
+.cust-date {
+  color: var(--ink-3);
+  font-size: 13px;
+}
