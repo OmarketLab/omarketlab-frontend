@@ -36,11 +36,29 @@
   padding: 2px 6px;
   border-radius: 5px;
 }
+.detail-empty p {
+  margin: 0;
+}
+.detail-retry {
+  margin-top: 16px;
+  padding: 8px 18px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--accent-strong);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+.detail-retry:hover {
+  background: var(--accent-wash);
+}
 
 /* 2단 — 높이 정렬 (stretch) */
 .detail-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); /* 좌:우 = 6:4 */
   gap: 22px;
   align-items: stretch;
 }

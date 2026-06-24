@@ -31,6 +31,12 @@
   color: #fff;
 }
 
+/* < > 블록 이동 화살표 */
+.pagination-arrow {
+  font-size: 16px;
+  line-height: 1;
+}
+
 .pagination-btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;

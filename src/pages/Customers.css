@@ -40,6 +40,35 @@
   font-size: 14px;
 }
 
+/* 고객분류 / 페이지당 셀렉트 묶음 — 우측 정렬 */
+.cust-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.cust-size {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+.cust-size-select {
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
 /* 테이블 카드 */
 .cust-card {
   background: var(--surface);
@@ -47,6 +76,39 @@
   border-radius: var(--r-md);
   box-shadow: var(--shadow-sm);
   overflow: hidden;
+}
+
+/* 로딩 / 에러 상태 — 테이블 카드와 동일 톤, 내용만 안내 메시지 */
+.cust-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 56px 24px;
+  text-align: center;
+  color: var(--ink-3);
+  font-size: 14px;
+}
+
+.cust-state-error {
+  color: var(--ink-2);
+}
+
+.cust-retry {
+  padding: 8px 18px;
+  border-radius: var(--r-sm, 8px);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--accent-strong);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+
+.cust-retry:hover {
+  background: var(--accent-wash);
 }
 
 .cust-table {

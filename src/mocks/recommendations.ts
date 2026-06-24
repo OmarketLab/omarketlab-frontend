@@ -14,7 +14,7 @@ export function fetchMockRecommendation(
         stockCode: '85123A',
         similarityScore: 0.873421,
         rank: 1,
-        match_reason: {
+        matchReason: {
           co_purchased_with: '85123A',
           source: '동시구매',
           segment_support: 0.62,
@@ -24,7 +24,7 @@ export function fetchMockRecommendation(
         stockCode: '47566',
         similarityScore: 0.812004,
         rank: 2,
-        match_reason: {
+        matchReason: {
           co_purchased_with: '85123A',
           source: '동시구매',
           segment_support: 0.58,
@@ -34,7 +34,7 @@ export function fetchMockRecommendation(
         stockCode: '47563',
         similarityScore: 0.654001,
         rank: 3,
-        match_reason: {
+        matchReason: {
           co_purchased_with: '85123A',
           source: '동시구매',
           segment_support: 0.49,

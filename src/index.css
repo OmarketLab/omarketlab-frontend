@@ -84,6 +84,10 @@ button {
   --seg: #0e9f6e;
   --seg-bg: #e7f6ef;
 }
+.seg-loyal {
+  --seg: #4f46e5;
+  --seg-bg: #ecebfd;
+}
 .seg-new {
   --seg: #2563eb;
   --seg-bg: #e8f0fe;
