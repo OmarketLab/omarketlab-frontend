@@ -58,7 +58,7 @@
 /* 2단 — 높이 정렬 (stretch) */
 .detail-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); /* 좌:우 = 6:4 */
   gap: 22px;
   align-items: stretch;
 }

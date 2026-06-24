@@ -150,7 +150,7 @@ function CustomerDetail() {
   if (status === 'loading') {
     return (
       <div className="detail">
-        <button type="button" className="detail-back" onClick={() => navigate(-1)}>
+        <button type="button" className="detail-back" onClick={() => navigate('/customers')}>
           ← 고객목록
         </button>
         <div className="detail-empty">
@@ -163,7 +163,7 @@ function CustomerDetail() {
   if (status === 'error') {
     return (
       <div className="detail">
-        <button type="button" className="detail-back" onClick={() => navigate(-1)}>
+        <button type="button" className="detail-back" onClick={() => navigate('/customers')}>
           ← 고객목록
         </button>
         <div className="detail-empty">
@@ -184,7 +184,7 @@ function CustomerDetail() {
   if (status === 'notfound' || !detail) {
     return (
       <div className="detail">
-        <button type="button" className="detail-back" onClick={() => navigate(-1)}>
+        <button type="button" className="detail-back" onClick={() => navigate('/customers')}>
           ← 고객목록
         </button>
         <div className="detail-empty">
@@ -202,7 +202,7 @@ function CustomerDetail() {
 
   return (
     <div className="detail">
-      <button type="button" className="detail-back" onClick={() => navigate(-1)}>
+      <button type="button" className="detail-back" onClick={() => navigate('/customers')}>
         ← 고객목록
       </button>
 

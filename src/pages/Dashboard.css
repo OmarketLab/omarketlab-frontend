@@ -1,17 +1,34 @@
 .dash {
-  max-width: 760px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .dash-head {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-bottom: 28px;
+  margin-bottom: 26px;
+}
+
+.dash-title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .dash-title {
   font-size: 32px;
   font-weight: 600;
+}
+
+/* 분석일시 — 데이터 출처 표식 (모노) */
+.dash-analyzed {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-3);
+  white-space: nowrap;
 }
 
 .dash-sub {
@@ -20,6 +37,242 @@
   font-size: 15px;
 }
 
+/* 로딩 / 에러 상태 */
+.dash-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.dash-state {
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--ink-3);
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+
+/* ── 본문 2단: 좌(구성+카드) / 우(도넛 패널) ────────── */
+.dash-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 16px;
+  align-items: stretch;
+  margin-bottom: 22px;
+}
+
+.dash-left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* 구성 누적 바 카드 */
+.comp {
+  padding: 24px 26px 26px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.comp-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.comp-total {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+
+.comp-total-num {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.comp-total-label {
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+/* 누적 비율 바 — 세그먼트 톤으로 전체 구성을 한 줄에 */
+.comp-bar {
+  display: flex;
+  gap: 3px;
+  height: 34px;
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+
+.comp-seg {
+  height: 100%;
+  background: var(--seg);
+  border-radius: 4px;
+  transition: opacity 0.12s ease;
+  min-width: 4px;
+}
+
+.comp-bar:hover .comp-seg {
+  opacity: 0.45;
+}
+
+.comp-bar:hover .comp-seg:hover {
+  opacity: 1;
+}
+
+/* ── 우측 도넛 패널 ───────────────────────────────── */
+.donut-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 22px 24px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.donut-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+}
+
+.donut {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 300px;
+}
+
+.donut-seg {
+  transition: opacity 0.12s ease;
+}
+
+.donut:hover .donut-seg {
+  opacity: 0.4;
+}
+
+.donut:hover .donut-seg:hover {
+  opacity: 1;
+}
+
+.donut-num {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  fill: var(--ink);
+}
+
+.donut-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  fill: var(--ink-3);
+}
+
+/* 좁은 화면 — 도넛 패널을 아래로 */
+@media (max-width: 820px) {
+  .dash-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── 세그먼트 카드 ─────────────────────────────────── */
+.seg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.seg-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.14s ease, transform 0.14s ease,
+    box-shadow 0.14s ease;
+}
+
+.seg-card:hover {
+  border-color: var(--seg);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.seg-card-chip {
+  align-self: flex-start;
+}
+
+.seg-card-count {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.seg-card-count em {
+  font-style: normal;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-3);
+  margin-left: 3px;
+}
+
+.seg-card-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.seg-card-bar {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--line-2);
+  overflow: hidden;
+}
+
+.seg-card-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--seg);
+}
+
+.seg-card-pct {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+  min-width: 44px;
+  text-align: right;
+}
+
+/* ── 바로가기 CTA ──────────────────────────────────── */
 .dash-cta {
   display: flex;
   align-items: center;
