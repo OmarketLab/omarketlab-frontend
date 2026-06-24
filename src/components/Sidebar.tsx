@@ -14,10 +14,21 @@ function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
-        <span className="sidebar-mark">om</span>
+        <svg className="sidebar-mark" viewBox="0 0 256 256" aria-label="OMarketLab 로고">
+          <defs>
+            <linearGradient id="omSidebarBag" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stopColor="#F9A94B" />
+              <stop offset="1" stopColor="#ED7A14" />
+            </linearGradient>
+          </defs>
+          <rect x="0" y="0" width="256" height="256" rx="56" fill="#23272F" />
+          <path d="M96 78 a32 28 0 0 1 64 0" fill="none" stroke="url(#omSidebarBag)" strokeWidth="13" strokeLinecap="round" />
+          <rect x="62" y="74" width="132" height="116" rx="26" fill="url(#omSidebarBag)" />
+          <circle cx="128" cy="132" r="34" fill="#23272F" />
+        </svg>
         <span className="sidebar-word">
-          omarketlab
-          <span className="sidebar-tag">고객 인텔리전스</span>
+          OMarketLab
+          <span className="sidebar-tag">AI 고객 인텔리전스</span>
         </span>
       </div>
 
