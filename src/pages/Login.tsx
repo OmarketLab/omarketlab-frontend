@@ -13,18 +13,20 @@ function Login() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    if (!username.trim() || !password.trim()) {
-      setError('아이디와 비밀번호를 모두 입력해 주세요.')
-      return
-    }
+    // if (!username.trim() || !password.trim()) {
+    //   setError('아이디와 비밀번호를 모두 입력해 주세요.')
+    //   return
+    // }
     // mock 로그인 — 데모 계정만 통과, 그 외 401 처리
-    if (username.trim() === 'marketer01' && password.trim() === 'P@ssw0rd!') {
-      setError('')
+    // if (username.trim() === 'marketer01' && password.trim() === 'P@ssw0rd!') {
+    //   setError('')
+    //   login()
+    //   navigate('/', { replace: true })
+    // } else {
+    //   setError('아이디 또는 비밀번호가 일치하지 않습니다.')
+    // }
       login()
       navigate('/', { replace: true })
-    } else {
-      setError('아이디 또는 비밀번호가 일치하지 않습니다.')
-    }
   }
 
   return (
