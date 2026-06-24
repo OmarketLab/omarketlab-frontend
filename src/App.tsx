@@ -12,10 +12,7 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* 인증 전 — 단독 레이아웃 */}
           <Route path="/login" element={<Login />} />
-
-          {/* 인증 후 — 사이드바 공통 레이아웃 */}
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>
               <Route path="/" element={<Dashboard />} />

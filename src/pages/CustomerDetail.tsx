@@ -321,9 +321,10 @@ function CustomerDetail() {
               <div className="recommend-center">
                 <button
                   type="button"
-                  className="recommend-btn"
+                  className="recommend-btn recommend-btn-primary"
                   onClick={generateRecommendation}
                 >
+                  <span className="recommend-btn-spark" aria-hidden="true">✦</span>
                   AI로 상품 추천하기
                 </button>
                 <p className="recommend-hint">

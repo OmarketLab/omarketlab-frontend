@@ -69,7 +69,7 @@ function Dashboard() {
         <SegmentOverview summary={summary} />
       )}
 
-      {/* 조회 전(로딩/에러)에도 CTA는 노출 — done이면 좌측 컬럼 안에 들어감 */}
+      {/* 조회 전(로딩/에러)에도 CTA는 노출 */}
       {status !== 'done' && <CustomersCta />}
     </div>
   )
@@ -91,6 +91,20 @@ function CustomersCta() {
   )
 }
 
+// 색상 의미 범례 — 칩과 동일한 segmentTone 클래스로 색을 맞춤
+function SegmentLegend({ segments }: { segments: SegmentCount[] }) {
+  return (
+    <ul className="seg-legend">
+      {segments.map((s) => (
+        <li key={s.segment} className="seg-legend-item">
+          <span className={`seg-legend-dot ${segmentTone(s.segment)}`} />
+          <span className="seg-legend-name">{s.segment}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
 function SegmentOverview({ summary }: { summary: SegmentSummary }) {
   // 비율은 세그먼트 합계 기준 — 누적 바가 항상 100%를 채우고 카드 비율과 일치
   const total = summary.segments.reduce((acc, s) => acc + s.count, 0) || 1
@@ -99,72 +113,79 @@ function SegmentOverview({ summary }: { summary: SegmentSummary }) {
   )
 
   return (
-    <div className="dash-grid">
-      {/* 좌측 — 구성 누적 바 + 세그먼트 카드 */}
-      <div className="dash-left">
-        <section className="comp">
-          <div className="comp-top">
-            <span className="eyebrow">Segment Composition</span>
-            <div className="comp-total">
-              <span className="comp-total-num">
-                {summary.totalCustomers.toLocaleString()}
+    <div className="dash-stack">
+      {/* 세그먼트 카드 — 맨 위 가로 한 줄 */}
+      <div className="seg-grid">
+        {ordered.map((s) => {
+          const pct = (s.count / total) * 100
+          return (
+            <div
+              key={s.segment}
+              className={`seg-card ${segmentTone(s.segment)}`}
+            >
+              <span className="seg-chip seg-card-chip">{s.segment}</span>
+              <span className="seg-card-count">
+                {s.count.toLocaleString()}
+                <em>명</em>
               </span>
-              <span className="comp-total-label">전체 고객</span>
-            </div>
-          </div>
-
-          <div className="comp-bar" role="img" aria-label="세그먼트 구성 비율">
-            {ordered.map((s) => (
-              <div
-                key={s.segment}
-                className={`comp-seg ${segmentTone(s.segment)}`}
-                style={{ width: `${(s.count / total) * 100}%` }}
-                title={`${s.segment} · ${s.count.toLocaleString()}명`}
-              />
-            ))}
-          </div>
-        </section>
-
-        <div className="seg-grid">
-          {ordered.map((s) => {
-            const pct = (s.count / total) * 100
-            return (
-              <div
-                key={s.segment}
-                className={`seg-card ${segmentTone(s.segment)}`}
-              >
-                <span className="seg-chip seg-card-chip">{s.segment}</span>
-                <span className="seg-card-count">
-                  {s.count.toLocaleString()}
-                  <em>명</em>
-                </span>
-                <div className="seg-card-foot">
-                  <div className="seg-card-bar">
-                    <span style={{ width: `${pct}%` }} />
-                  </div>
-                  <span className="seg-card-pct">{pct.toFixed(1)}%</span>
+              <div className="seg-card-foot">
+                <div className="seg-card-bar">
+                  <span style={{ width: `${pct}%` }} />
                 </div>
+                <span className="seg-card-pct">{pct.toFixed(1)}%</span>
               </div>
-            )
-          })}
-        </div>
-
-        <CustomersCta />
+            </div>
+          )
+        })}
       </div>
 
-      {/* 우측 — 큰 도넛 차트 패널 */}
-      <aside className="donut-panel">
-        <span className="eyebrow">Distribution</span>
-        <div className="donut-wrap">
-          <Donut
-            segments={ordered}
-            total={total}
-            centerValue={summary.totalCustomers}
-            size={264}
-            stroke={36}
-          />
+      {/* 좌: 누적 바 + 고객목록 CTA / 우: 도넛 */}
+      <div className="dash-charts">
+        <div className="dash-left-col">
+          <section className="comp">
+            <div className="comp-top">
+              <span className="eyebrow">Segment Composition</span>
+              <div className="comp-total">
+                <span className="comp-total-num">
+                  {summary.totalCustomers.toLocaleString()}
+                </span>
+                <span className="comp-total-label">전체 고객</span>
+              </div>
+            </div>
+
+            <div className="comp-bar" role="img" aria-label="세그먼트 구성 비율">
+              {ordered.map((s) => (
+                <div
+                  key={s.segment}
+                  className={`comp-seg ${segmentTone(s.segment)}`}
+                  style={{ width: `${(s.count / total) * 100}%` }}
+                  title={`${s.segment} · ${s.count.toLocaleString()}명`}
+                />
+              ))}
+            </div>
+
+            {/* 색상 의미 범례 */}
+            <SegmentLegend segments={ordered} />
+          </section>
+
+          <CustomersCta />
         </div>
-      </aside>
+
+        <aside className="donut-panel">
+          <span className="eyebrow">Distribution</span>
+          <div className="donut-wrap">
+            <Donut
+              segments={ordered}
+              total={total}
+              centerValue={summary.totalCustomers}
+              size={220}
+              stroke={32}
+            />
+          </div>
+          {/* 색상 의미 범례 */}
+          <SegmentLegend segments={ordered} />
+        </aside>
+      </div>
     </div>
   )
 }

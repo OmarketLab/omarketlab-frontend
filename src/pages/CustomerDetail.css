@@ -593,3 +593,58 @@
   letter-spacing: 0.03em;
   color: rgba(255, 255, 255, 0.42);
 }
+
+/* AI 추천 강조 버튼 (empty 상태 전용) — 보라 그라데이션 + 반짝이는 ✦ */
+.recommend-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #8b80ff, #6b5fd6);
+  color: #fff;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.15),
+    0 8px 24px rgba(139, 128, 255, 0.5);
+}
+
+.recommend-btn-primary:hover {
+  transform: translateY(-2px);
+  animation: rec-glow 1.2s ease-in-out infinite;
+}
+
+@keyframes rec-glow {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.25),
+      0 8px 22px rgba(139, 128, 255, 0.45);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.45),
+      0 10px 32px rgba(139, 128, 255, 0.85),
+      0 0 26px rgba(160, 150, 255, 0.6);
+  }
+}
+
+.recommend-btn-spark {
+  font-size: 15px;
+  line-height: 1;
+  display: inline-block;
+  animation: rec-spark 1.6s ease-in-out infinite;
+}
+
+@keyframes rec-spark {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(0.75) rotate(0deg);
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.4);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5) rotate(90deg);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 18px rgba(180, 170, 255, 0.7);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recommend-btn-spark { animation: none; }
+}
