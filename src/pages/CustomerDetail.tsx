@@ -83,6 +83,7 @@ function CustomerDetail() {
   const [recStatus, setRecStatus] = useState<RecStatus>('loading')
   const currentIdRef = useRef<string | undefined>(id) // 응답 도착 시 현재 고객 확인용
   const lastActionRef = useRef<'lookup' | 'generate'>('lookup') // error 재시도 대상
+  const lookedUpIdRef = useRef<string | undefined>(undefined) // StrictMode 이중 조회 방지
 
   useEffect(() => {
     if (!id) {
@@ -158,6 +159,8 @@ function CustomerDetail() {
   useEffect(() => {
     currentIdRef.current = id
     if (!id) return
+    if (lookedUpIdRef.current === id) return // StrictMode 개발 모드 이중 호출 방지
+    lookedUpIdRef.current = id
     setRec(null)
     lookupRecommendation(id)
     // eslint-disable-next-line react-hooks/exhaustive-deps
