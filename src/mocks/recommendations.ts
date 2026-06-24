@@ -12,30 +12,36 @@ export function fetchMockRecommendation(
     products: [
       {
         stockCode: '85123A',
+        description: 'WHITE HANGING HEART T-LIGHT HOLDER',
         similarityScore: 0.873421,
         rank: 1,
-        matchReason: {
+        match_reason: {
           co_purchased_with: '85123A',
+          co_purchased_with_description: 'WHITE HANGING HEART T-LIGHT HOLDER',
           source: '동시구매',
           segment_support: 0.62,
         },
       },
       {
         stockCode: '47566',
+        description: 'PARTY BUNTING',
         similarityScore: 0.812004,
         rank: 2,
-        matchReason: {
+        match_reason: {
           co_purchased_with: '85123A',
+          co_purchased_with_description: 'WHITE HANGING HEART T-LIGHT HOLDER',
           source: '동시구매',
           segment_support: 0.58,
         },
       },
       {
         stockCode: '47563',
+        description: 'RETRO COFFEE MUGS ASSORTED',
         similarityScore: 0.654001,
         rank: 3,
-        matchReason: {
+        match_reason: {
           co_purchased_with: '85123A',
+          co_purchased_with_description: 'WHITE HANGING HEART T-LIGHT HOLDER',
           source: '동시구매',
           segment_support: 0.49,
         },

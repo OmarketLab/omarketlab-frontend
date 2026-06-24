@@ -11,6 +11,28 @@ import type { Recommendation } from '../types/recommendation'
 import { segmentTone } from '../utils/segment'
 import './CustomerDetail.css'
 
+// rationale 문장 속 stockCode를 상품명(description)으로 치환해 읽기 쉽게 만든다.
+// 추천 상품(stockCode→description)과 동시구매 상품(co_purchased_with→co_purchased_with_description)을 모두 매핑한다.
+function describeRationale(rec: Recommendation): string {
+  let text = rec.rationale
+  // 코드→상품명 매핑 수집 (추천 상품 + 동시구매 상품)
+  const codeToName = new Map<string, string>()
+  for (const p of rec.products) {
+    if (p.description) codeToName.set(p.stockCode, p.description)
+    const { co_purchased_with, co_purchased_with_description } = p.match_reason
+    if (co_purchased_with && co_purchased_with_description) {
+      codeToName.set(co_purchased_with, co_purchased_with_description)
+    }
+  }
+  // 긴 코드부터 치환해 부분 문자열 충돌(예: 22189 vs 2218)을 방지
+  const codes = [...codeToName.keys()].sort((a, b) => b.length - a.length)
+  for (const code of codes) {
+    const escaped = code.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    text = text.replace(new RegExp(escaped, 'g'), codeToName.get(code)!)
+  }
+  return text
+}
+
 // R/F/M 점수를 5단 미터로 — 추상적 점수를 물리적으로 읽히게 (시그니처)
 function Meter({
   letter,
@@ -364,11 +386,12 @@ function CustomerDetail() {
                       <span className="rec-rank">{p.rank}</span>
                       <div className="rec-body">
                         <div className="rec-row">
-                          <span className="rec-code">{p.stockCode}</span>
+                          <span className="rec-code">{p.description}</span>
                           <span className="rec-score">
                             {(p.similarityScore * 100).toFixed(1)}%
                           </span>
                         </div>
+                        <p className="rec-desc">{p.stockCode}</p>
                         <div className="rec-bar" aria-hidden="true">
                           <span
                             style={{ width: `${p.similarityScore * 100}%` }}
@@ -376,11 +399,12 @@ function CustomerDetail() {
                         </div>
                         <div className="rec-reason">
                           <span className="rec-reason-tag">
-                            {p.matchReason.source}
+                            {p.match_reason.source}
                           </span>
                           <span className="rec-reason-text">
-                            {p.matchReason.co_purchased_with} 기준 · 지지도{' '}
-                            {(p.matchReason.segment_support * 100).toFixed(0)}%
+                            {p.match_reason.co_purchased_with_description} 기준 ·
+                            지지도{' '}
+                            {(p.match_reason.segment_support * 100).toFixed(0)}%
                           </span>
                         </div>
                       </div>
@@ -392,7 +416,9 @@ function CustomerDetail() {
                   <span className="rec-why-icon">✦</span>
                   <div className="rec-why-body">
                     <span className="rec-why-label">추천 이유</span>
-                    <p className="rec-why-text">{rec.rationale}</p>
+                    <p className="rec-why-text">
+                      {describeRationale(rec)}
+                    </p>
                   </div>
                 </div>
 

@@ -488,7 +488,7 @@
 
 .rec-item {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   gap: 12px;
   padding: 12px 14px;
   border-radius: var(--r-md);
@@ -536,6 +536,13 @@
   font-size: 13px;
   font-weight: 500;
   color: #c5c0ff;
+}
+
+.rec-desc {
+  margin: 0 0 8px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.62);
 }
 
 .rec-bar {
