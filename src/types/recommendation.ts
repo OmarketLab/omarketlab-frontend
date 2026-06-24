@@ -11,7 +11,7 @@ export interface RecommendedProduct {
   stockCode: string
   similarityScore: number // 0~1
   rank: number
-  match_reason: MatchReason
+  matchReason: MatchReason
 }
 
 export interface Recommendation {
