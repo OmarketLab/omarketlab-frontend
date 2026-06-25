@@ -41,7 +41,8 @@ function Login() {
               </linearGradient>
             </defs>
             <rect x="0" y="0" width="256" height="256" rx="40" fill="#23272F" />
-            <path d="M96 78 a32 28 0 0 1 64 0" fill="none" stroke="url(#omBag)" strokeWidth="13" strokeLinecap="round" />
+            <path d="M96 80 a16 30 0 0 1 32 0" fill="none" stroke="url(#omBag)" strokeWidth="13" strokeLinecap="round" />
+            <path d="M128 80 a16 30 0 0 1 32 0" fill="none" stroke="url(#omBag)" strokeWidth="13" strokeLinecap="round" />
             <rect x="62" y="74" width="132" height="116" rx="26" fill="url(#omBag)" />
             <circle cx="128" cy="132" r="34" fill="#23272F" />
           </svg>
