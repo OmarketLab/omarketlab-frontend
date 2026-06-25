@@ -100,8 +100,8 @@ button {
   --seg-bg: #eef1f5;
 }
 .seg-atrisk {
-  --seg: #d97706;
-  --seg-bg: #fcf1e1;
+  --seg: #dc2626;
+  --seg-bg: #fde8e8;
 }
 .seg-dormant {
   --seg: #8a93a6;

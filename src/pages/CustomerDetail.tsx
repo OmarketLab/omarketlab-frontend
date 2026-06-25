@@ -10,6 +10,8 @@ import type { CustomerDetail as CustomerDetailData } from '../types/customer'
 import type { Recommendation } from '../types/recommendation'
 import { segmentTone } from '../utils/segment'
 import './CustomerDetail.css'
+const GEN_STEPS = ['구매 이력 분석', '유사 상품 탐색', '추천 근거 생성']
+const RING_CIRC = 226 // 2πr, r=36
 
 // rationale 문장 속 stockCode를 상품명(description)으로 치환해 읽기 쉽게 만든다.
 // 추천 상품(stockCode→description)과 동시구매 상품(co_purchased_with→co_purchased_with_description)을 모두 매핑한다.
@@ -33,27 +35,33 @@ function describeRationale(rec: Recommendation): string {
   return text
 }
 
-// R/F/M 점수를 5단 미터로 — 추상적 점수를 물리적으로 읽히게 (시그니처)
+// R/F/M 점수를 5단 미터로 — 세그먼트 색(--seg)에 칸별 투명도 적용
 function Meter({
   letter,
   label,
   score,
   raw,
+  toneClass,
 }: {
   letter: string
   label: string
   score: number
   raw: string
+  toneClass: string
 }) {
   return (
-    <div className="meter">
+    <div className={`meter ${toneClass}`}>
       <div className="meter-top">
         <span className="meter-letter">{letter}</span>
         <span className="meter-score">{score}</span>
       </div>
       <div className="meter-bar" aria-hidden="true">
         {[1, 2, 3, 4, 5].map((i) => (
-          <span key={i} className={i <= score ? 'seg on' : 'seg'} />
+          <span
+            key={i}
+            className={i <= score ? 'seg on' : 'seg'}
+            data-cell={i}
+          />
         ))}
       </div>
       <div className="meter-foot">
@@ -84,6 +92,19 @@ function CustomerDetail() {
   const currentIdRef = useRef<string | undefined>(id) // 응답 도착 시 현재 고객 확인용
   const lastActionRef = useRef<'lookup' | 'generate'>('lookup') // error 재시도 대상
   const lookedUpIdRef = useRef<string | undefined>(undefined) // StrictMode 이중 조회 방지
+  const [genMsgIdx, setGenMsgIdx] = useState(0)
+
+  const [genStep, setGenStep] = useState(0)
+
+  // 추천 생성 중일 때만 단계 진행 (연출 — 실제 응답 오면 recStatus가 바뀌며 멈춤)
+  useEffect(() => {
+    if (recStatus !== 'generating') return
+    setGenStep(0)
+    const iv = setInterval(() => {
+      setGenStep((s) => (s < GEN_STEPS.length - 1 ? s + 1 : s))
+    }, 1400)
+    return () => clearInterval(iv)
+  }, [recStatus])
 
   useEffect(() => {
     if (!id) {
@@ -224,6 +245,8 @@ function CustomerDetail() {
   }
 
   const { customerId, result, purchaseSummary } = detail
+  // 이탈위험 고객이면 분류 근거를 레드 톤으로 강조
+  const isAtRisk = segmentTone(result.segment) === 'seg-atrisk'
 
   return (
     <div className="detail">
@@ -267,26 +290,33 @@ function CustomerDetail() {
                 label="Recency"
                 score={result.rScore}
                 raw={`${result.recency}일`}
+                toneClass={segmentTone(result.segment)}
               />
               <Meter
                 letter="F"
                 label="Frequency"
                 score={result.fScore}
                 raw={`${result.frequency}회`}
+                toneClass={segmentTone(result.segment)}
               />
               <Meter
                 letter="M"
                 label="Monetary"
                 score={result.mScore}
                 raw={result.monetary.toLocaleString()}
+                toneClass={segmentTone(result.segment)}
               />
             </div>
 
             {/* 분류 근거 — 강조 콜아웃 (서버 문자열 그대로) */}
-            <div className="rationale-box">
+            <div className={`rationale-box${isAtRisk ? ' rationale-box-atrisk' : ''}`}>
               <div className="rationale-head">
-                <span className="rationale-icon">✦</span>
-                <span className="rationale-label">AI 분류 근거</span>
+                <span className="rationale-icon" aria-hidden="true">
+                  {isAtRisk ? '⚠' : '✦'}
+                </span>
+                <span className="rationale-label">
+                  {isAtRisk ? '이탈위험 분류 근거' : 'AI 분류 근거'}
+                </span>
               </div>
               <p className="rationale-text">{result.rationale}</p>
             </div>
@@ -361,8 +391,43 @@ function CustomerDetail() {
 
             {recStatus === 'generating' && (
               <div className="recommend-center">
-                <span className="recommend-spinner" aria-hidden="true" />
-                <p className="recommend-hint">AI 추천을 생성하는 중…</p>
+                <div className="gen-ring-wrap" aria-hidden="true">
+                  <svg className="gen-svg" width="84" height="84" viewBox="0 0 84 84">
+                    <defs>
+                      <linearGradient id="genGrad" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0" stopColor="#8b80ff" />
+                        <stop offset="1" stopColor="#c0b9ff" />
+                      </linearGradient>
+                    </defs>
+                    <circle className="gen-track" cx="42" cy="42" r="36" />
+                    <circle
+                      className="gen-prog"
+                      cx="42"
+                      cy="42"
+                      r="36"
+                      style={{
+                        strokeDashoffset:
+                          RING_CIRC * (1 - ((genStep + 1) / GEN_STEPS.length) * 0.92),
+                      }}
+                    />
+                  </svg>
+                  <span className="gen-spark">✦</span>
+                </div>
+                <div className="gen-steps">
+                  {GEN_STEPS.map((label, i) => (
+                    <div
+                      key={label}
+                      className={`gen-step${i === genStep ? ' active' : ''}${
+                        i < genStep ? ' done' : ''
+                      }`}
+                    >
+                      <span className="gen-step-ic">
+                        {i < genStep ? '✓' : i === genStep ? '✦' : ''}
+                      </span>
+                      {label}
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 

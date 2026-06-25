@@ -196,12 +196,16 @@
   flex: 1;
   height: 6px;
   border-radius: 3px;
-  background: var(--line);
+  background: var(--seg, var(--accent));
+  opacity: 0.1;
 }
 
-.meter-bar .seg.on {
-  background: var(--accent);
-}
+/* 켜진 칸 — 오른쪽으로 갈수록 진하게 (방향 나) */
+.meter-bar .seg.on:nth-child(1) { opacity: 0.4; }
+.meter-bar .seg.on:nth-child(2) { opacity: 0.55; }
+.meter-bar .seg.on:nth-child(3) { opacity: 0.7; }
+.meter-bar .seg.on:nth-child(4) { opacity: 0.85; }
+.meter-bar .seg.on:nth-child(5) { opacity: 1; }
 
 .meter-foot {
   display: flex;
@@ -340,6 +344,37 @@
   box-shadow: var(--shadow-md);
   overflow: hidden;
   position: relative;
+}
+
+/* 패널 안쪽에서 도는 흰 테두리 — 추천 전/후 항상 (어두운 영역 위라 대비가 살아남) */
+.recommend-panel::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 13px;
+  padding: 1px;
+  background: conic-gradient(from var(--rp-angle),
+    rgba(255, 255, 255, 0.08) 0deg,
+    rgba(255, 255, 255, 0.08) 160deg,
+    rgba(255, 255, 255, 0.85) 235deg,
+    rgba(255, 255, 255, 1) 280deg,
+    rgba(255, 255, 255, 0.85) 320deg,
+    rgba(255, 255, 255, 0.08) 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: rp-spin 2s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 패널 내부 요소를 도는 선 위로 */
+.recommend-top,
+.recommend-center,
+.recommend-result {
+  position: relative;
+  z-index: 1;
 }
 
 .recommend-top {
@@ -601,57 +636,189 @@
   color: rgba(255, 255, 255, 0.42);
 }
 
-/* AI 추천 강조 버튼 (empty 상태 전용) — 보라 그라데이션 + 반짝이는 ✦ */
+/* ════════════════════════════════════════════════
+   AI 추천 강조 — 주행 테두리 + 버튼 번쩍임 + 스파크
+   ════════════════════════════════════════════════ */
+
+/* 회전 각도 변수 (주행 테두리용) */
+@property --rp-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes rp-spin {
+  to { --rp-angle: 360deg; }
+}
+
+/* AI 추천 강조 버튼 (empty 상태 전용) — 보라 그라데이션 + 그림자 번쩍임 */
 .recommend-btn-primary {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   background: linear-gradient(135deg, #8b80ff, #6b5fd6);
   color: #fff;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.15),
-    0 8px 24px rgba(139, 128, 255, 0.5);
+  animation: rp-btn-flash 1.8s ease-in-out infinite;
 }
 
 .recommend-btn-primary:hover {
   transform: translateY(-2px);
-  animation: rec-glow 1.2s ease-in-out infinite;
+  animation-duration: 0.9s;
 }
 
-@keyframes rec-glow {
+@keyframes rp-btn-flash {
   0%, 100% {
-    box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.25),
-      0 8px 22px rgba(139, 128, 255, 0.45);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15), 0 6px 18px rgba(139, 128, 255, 0.4);
   }
   50% {
     box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.45),
-      0 10px 32px rgba(139, 128, 255, 0.85),
-      0 0 26px rgba(160, 150, 255, 0.6);
+      0 0 0 1px rgba(255, 255, 255, 0.35),
+      0 8px 30px rgba(139, 128, 255, 0.85),
+      0 0 24px rgba(180, 170, 255, 0.7);
   }
 }
 
+/* 버튼 안 ✦ 스파크 — 크게 반짝이며 회전 */
 .recommend-btn-spark {
-  font-size: 15px;
-  line-height: 1;
   display: inline-block;
-  animation: rec-spark 1.6s ease-in-out infinite;
+  font-size: 16px;
+  line-height: 1;
+  animation: rp-spark 1.3s ease-in-out infinite;
 }
 
-@keyframes rec-spark {
+@keyframes rp-spark {
   0%, 100% {
     opacity: 0.7;
-    transform: scale(0.75) rotate(0deg);
-    text-shadow: 0 0 2px rgba(255, 255, 255, 0.4);
+    transform: scale(0.8) rotate(0deg);
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
   }
   50% {
     opacity: 1;
-    transform: scale(1.5) rotate(90deg);
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 18px rgba(180, 170, 255, 0.7);
+    transform: scale(1.55) rotate(180deg);
+    text-shadow: 0 0 12px rgba(255, 255, 255, 1), 0 0 20px rgba(180, 170, 255, 0.9);
   }
 }
 
+/* 접근성 — 모션 줄임 설정 시 모든 강조 애니메이션 정지 */
 @media (prefers-reduced-motion: reduce) {
-  .recommend-btn-spark { animation: none; }
+  .recommend-panel::before,
+  .recommend-btn-primary,
+  .recommend-btn-spark {
+    animation: none;
+  }
+}
+
+/* ── 이탈위험 고객 — 분류 근거 레드 강조 (R1: 색 교체) ── */
+.rationale-box-atrisk {
+  background: #fde8e8;
+  border-color: #f5b5b5;
+}
+
+.rationale-box-atrisk .rationale-icon {
+  background: #dc2626;
+}
+
+.rationale-box-atrisk .rationale-label {
+  color: #b91c1c;
+}
+
+/* ── 추천 생성 중 — 원형 진행링 + 단계 문구 (링과 단계 동기화) ── */
+.gen-ring-wrap {
+  position: relative;
+  width: 84px;
+  height: 84px;
+}
+
+.gen-svg {
+  transform: rotate(-90deg);
+}
+
+.gen-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 6;
+}
+
+.gen-prog {
+  fill: none;
+  stroke: url(#genGrad);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 226;
+  transition: stroke-dashoffset 0.6s ease;
+}
+
+.gen-spark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  animation: gen-spark-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes gen-spark-pulse {
+  0%, 100% {
+    opacity: 0.65;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.12);
+    text-shadow: 0 0 12px rgba(255, 255, 255, 0.85);
+  }
+}
+
+.gen-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.gen-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
+  transition: color 0.3s ease;
+}
+
+.gen-step.active {
+  color: #fff;
+  font-weight: 500;
+}
+
+.gen-step.done {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.gen-step-ic {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  flex-shrink: 0;
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.gen-step.active .gen-step-ic {
+  background: #8b80ff;
+  border-color: #8b80ff;
+}
+
+.gen-step.done .gen-step-ic {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gen-spark { animation: none; }
+  .gen-prog { transition: none; }
 }
