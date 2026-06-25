@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { fetchCustomerPage } from '../api/customers'
 import type { Customer, PageMeta } from '../types/customer'
 import { SEGMENTS, segmentTone } from '../utils/segment'
@@ -11,9 +11,13 @@ const PAGE_SIZE_OPTIONS = [20, 50, 100] as const // 페이지당 고객 수(size
 
 function Customers() {
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [pageNumber, setPageNumber] = useState(0)
   const [size, setSize] = useState<number>(PAGE_SIZE_OPTIONS[0])
-  const [segment, setSegment] = useState<string>('') // '' = 전체
+  // 대시보드 카드 클릭 시 ?segment=... 로 들어오면 해당 세그먼트로 초기 필터링
+  const [segment, setSegment] = useState<string>(
+    () => searchParams.get('segment') ?? '',
+  ) // '' = 전체
 
   // GET /api/v1/customers?page={pageNumber}&size={size}&segment={segment}
   const [content, setContent] = useState<Customer[]>([])
@@ -45,10 +49,12 @@ function Customers() {
     setPageNumber(0)
   }
 
-  // 세그먼트(고객분류) 변경 시 첫 페이지로 리셋
+  // 세그먼트(고객분류) 변경 시 첫 페이지로 리셋 + URL 쿼리 동기화
   const handleSegmentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSegment(e.target.value)
+    const next = e.target.value
+    setSegment(next)
     setPageNumber(0)
+    setSearchParams(next ? { segment: next } : {}, { replace: true })
   }
 
   return (

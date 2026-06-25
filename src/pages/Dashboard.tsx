@@ -119,8 +119,9 @@ function SegmentOverview({ summary }: { summary: SegmentSummary }) {
         {ordered.map((s) => {
           const pct = (s.count / total) * 100
           return (
-            <div
+            <Link
               key={s.segment}
+              to={`/customers?segment=${encodeURIComponent(s.segment)}`}
               className={`seg-card ${segmentTone(s.segment)}`}
             >
               <span className="seg-chip seg-card-chip">{s.segment}</span>
@@ -134,7 +135,7 @@ function SegmentOverview({ summary }: { summary: SegmentSummary }) {
                 </div>
                 <span className="seg-card-pct">{pct.toFixed(1)}%</span>
               </div>
-            </div>
+            </Link>
           )
         })}
       </div>
