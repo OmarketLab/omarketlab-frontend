@@ -9,7 +9,7 @@ function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [showPw, setShowPw] = useState(false)
-  const [error, setError] = useState('')
+  const [error] = useState('')
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()

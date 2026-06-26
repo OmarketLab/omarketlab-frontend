@@ -33,7 +33,8 @@ export async function fetchCustomerDetail(
 }
 
 // GET /api/v1/customers/{customerId}/recommendations — 기존 추천 조회
-// 200이면 추천(Recommendation)을 그대로 표시, 404면 아직 추천 없음(버튼 노출).
+// 추천이 있으면 200 + Recommendation. 분석 결과가 없으면 200 + { code: 'NO_ANALYSIS_DATA' }
+// (구버전 서버는 404). 두 경우 모두 호출부에서 '추천 없음'으로 처리한다.
 export async function getRecommendation(
   customerId: string,
 ): Promise<Recommendation> {

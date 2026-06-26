@@ -11,8 +11,22 @@
   box-sizing: border-box;
 }
 
+/* 모바일 — 사이드바 대신 상단 헤더(.header)/하단 네비(.nav) 사용, 본문 세로 적층 */
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+  }
+
+  /* 고정 헤더(56px) 아래에서 시작 + 고정 하단 네비(66px) 위로 여백 확보 */
+  .app-content {
+    padding-top: 72px;
+    padding-bottom: 84px;
+  }
+}
+
 @media (max-width: 720px) {
   .app-content {
-    padding: 24px 20px;
+    padding-left: 20px;
+    padding-right: 20px;
   }
 }

@@ -19,6 +19,8 @@
   gap: 11px;
   padding: 0 8px;
   margin-bottom: 30px;
+  text-decoration: none;
+  color: inherit;
 }
 
 .sidebar-mark {
@@ -99,4 +101,111 @@
   background: var(--line-2);
   border-color: var(--ink-3);
   color: var(--ink);
+}
+
+/* ── 모바일 상단 헤더(.header) / 하단 네비(.nav) — 기본은 숨김(데스크톱) ───── */
+.header,
+.nav {
+  display: none;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.header-word {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.header-logout {
+  padding: 7px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* 네비 탭: 아이콘 위 / 텍스트 아래, 활성 탭은 둥근 알약 배경으로 강조 */
+.nav-link {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin: 6px;
+  border-radius: 18px;
+  text-decoration: none;
+  color: var(--ink-3);
+  transition: color 0.14s ease, background 0.14s ease;
+}
+
+.nav-ic {
+  width: 23px;
+  height: 23px;
+  display: block;
+}
+
+.nav-text {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.nav-link.active {
+  color: var(--accent-strong);
+  background: var(--accent-wash);
+}
+
+@media (max-width: 768px) {
+  /* 데스크톱 사이드바 숨기고, 상단 헤더 + 하단 네비 노출 */
+  .sidebar {
+    display: none;
+  }
+
+  /* 상단 헤더 — 스크롤해도 항상 상단 고정 */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    height: 56px;
+    padding: 0 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .header .sidebar-mark {
+    width: 30px;
+    height: 30px;
+  }
+
+  /* 하단 네비 — 스크롤해도 항상 하단 고정 */
+  .nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    height: 66px;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+  }
 }

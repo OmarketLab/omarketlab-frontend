@@ -238,6 +238,25 @@
   }
 }
 
+/* ── 모바일 — 제목/여백 소폭 축소 ──────────────────────── */
+@media (max-width: 768px) {
+  .dash-title {
+    font-size: 26px;
+  }
+
+  .comp-top {
+    margin-bottom: 32px;
+  }
+
+  .comp {
+    padding: 20px 18px 22px;
+  }
+
+  .seg-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 .seg-card {
   display: flex;
   flex-direction: column;

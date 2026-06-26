@@ -7,7 +7,7 @@ import {
   createRecommendation,
 } from '../api/customers'
 import type { CustomerDetail as CustomerDetailData } from '../types/customer'
-import type { Recommendation } from '../types/recommendation'
+import { NO_ANALYSIS_DATA, type Recommendation } from '../types/recommendation'
 import { segmentTone } from '../utils/segment'
 import './CustomerDetail.css'
 const GEN_STEPS = ['구매 이력 분석', '유사 상품 탐색', '추천 근거 생성']
@@ -92,7 +92,7 @@ function CustomerDetail() {
   const currentIdRef = useRef<string | undefined>(id) // 응답 도착 시 현재 고객 확인용
   const lastActionRef = useRef<'lookup' | 'generate'>('lookup') // error 재시도 대상
   const lookedUpIdRef = useRef<string | undefined>(undefined) // StrictMode 이중 조회 방지
-  const [genMsgIdx, setGenMsgIdx] = useState(0)
+  // const [genMsgIdx] = useState(0)
 
   const [genStep, setGenStep] = useState(0)
 
@@ -140,12 +140,17 @@ function CustomerDetail() {
     getRecommendation(custId)
       .then((data) => {
         if (currentIdRef.current !== custId) return // 그새 다른 고객으로 이동
+        // 분석 결과 없음: 200 + code:NO_ANALYSIS_DATA → 버튼 노출
+        if (data.code === NO_ANALYSIS_DATA) {
+          setRecStatus('empty')
+          return
+        }
         setRec(data)
         setRecStatus('done')
       })
       .catch((err) => {
         if (currentIdRef.current !== custId) return
-        // 404 → 추천 없음(버튼 노출), 그 외 → 오류
+        // 404 → 추천 없음(버튼 노출, 구버전 호환), 그 외 → 오류
         if (axios.isAxiosError(err) && err.response?.status === 404) {
           setRecStatus('empty')
         } else {
@@ -162,12 +167,17 @@ function CustomerDetail() {
     createRecommendation(id)
       .then((data) => {
         if (currentIdRef.current !== id) return
+        // 분석 결과 없음: 200 + code:NO_ANALYSIS_DATA → 버튼 노출
+        if (data.code === NO_ANALYSIS_DATA) {
+          setRecStatus('empty')
+          return
+        }
         setRec(data)
         setRecStatus('done')
       })
       .catch((err) => {
         if (currentIdRef.current !== id) return
-        // 생성 결과가 없으면(404) 버튼 노출, 그 외 오류
+        // 생성 결과가 없으면(404, 구버전 호환) 버튼 노출, 그 외 오류
         if (axios.isAxiosError(err) && err.response?.status === 404) {
           setRecStatus('empty')
         } else {

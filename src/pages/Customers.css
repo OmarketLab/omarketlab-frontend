@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-bottom: 22px;
+  margin-bottom: 16px;
 }
 
 .cust-title-row {
@@ -40,12 +40,17 @@
   font-size: 14px;
 }
 
-/* 고객분류 / 페이지당 셀렉트 묶음 — 우측 정렬 */
+/* 고객분류 / 한번에 셀렉트 묶음 — 스크롤 시 상단 고정 바 */
 .cust-controls {
+  position: sticky;
+  top: 0;
+  z-index: 20;
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-left: auto;
+  padding: 8px 0;
+  margin-bottom: 14px;
+  background: var(--canvas);
 }
 
 .cust-size {
@@ -109,6 +114,12 @@
 
 .cust-retry:hover {
   background: var(--accent-wash);
+}
+
+/* 좁은 화면에서 테이블 가로 스크롤 (카드 라운드/overflow는 유지) */
+.cust-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .cust-table {
@@ -176,4 +187,173 @@
 .cust-date {
   color: var(--ink-3);
   font-size: 13px;
+}
+
+/* 무한 스크롤 — 하단 센티넬/상태 영역 */
+.cust-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin-top: 18px;
+  padding: 6px;
+}
+
+.cust-more-loading,
+.cust-more-end {
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+/* ── 모바일 — 헤더 줄바꿈 + 테이블 카드형 ───────────────── */
+@media (max-width: 768px) {
+  .cust-title-row {
+    flex-wrap: wrap;
+  }
+
+  /* 모바일 고정 헤더(56px) 아래에 컨트롤 바가 고정되도록 오프셋 */
+  .cust-controls {
+    top: 56px;
+    width: 100%;
+  }
+
+  .cust-size {
+    flex: 1;
+  }
+
+  .cust-size-select {
+    flex: 1;
+  }
+
+  /* 테이블 → 고객별 카드 (가로 스크롤 제거) */
+  .cust-table-wrap {
+    overflow-x: visible;
+  }
+
+  /* 목록 카드 래퍼는 투명 컨테이너로 — 각 행이 개별 카드가 됨
+     (로딩/에러/빈 상태 카드 .cust-state 는 카드 모양 유지) */
+  .cust-card:not(.cust-state) {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    overflow: visible;
+  }
+
+  .cust-table thead {
+    display: none;
+  }
+
+  .cust-table,
+  .cust-table tbody,
+  .cust-table td {
+    display: block;
+    width: 100%;
+  }
+
+  /* 행 = 개별 카드, 내부는 그리드 영역으로 배치 */
+  .cust-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas:
+      'seg  seg  date'
+      'id   id   id'
+      'rec  freq mon';
+    align-items: center;
+    gap: 12px 0;
+    padding: 16px;
+    margin-bottom: 12px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .cust-row:hover {
+    background: var(--surface);
+  }
+
+  /* 데스크톱 셀 스타일 초기화 */
+  .cust-table td {
+    padding: 0;
+    border: none;
+    font-size: 14px;
+    text-align: left;
+  }
+
+  /* 세그먼트 칩 — 좌상단 */
+  .cust-table td[data-label='세그먼트'] {
+    grid-area: seg;
+  }
+
+  /* 분석일시 — 우상단 */
+  .cust-date {
+    grid-area: date;
+    justify-self: end;
+    font-size: 13px;
+    color: var(--ink-3);
+  }
+
+  /* 고객ID — 라벨 + 값 */
+  .cust-id {
+    grid-area: id;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    font-size: 15px;
+  }
+
+  .cust-id::before {
+    content: '고객ID';
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-3);
+    margin-right: 6px;
+  }
+
+  /* RFM 점수 — 모바일 카드에서는 숨김 (.cust-table td 보다 명시도 높게) */
+  .cust-table td.cust-rfm {
+    display: none;
+  }
+
+  /* 지표 박스 — Recency / Frequency / Monetary 3열을 하나의 박스처럼 */
+  .cust-table td[data-label='Recency'],
+  .cust-table td[data-label='Frequency'],
+  .cust-table td[data-label='Monetary'] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    padding: 14px 8px;
+    background: #fafbfc;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .cust-table td[data-label='Recency'] {
+    grid-area: rec;
+    border-radius: 10px 0 0 10px;
+  }
+  .cust-table td[data-label='Frequency'] {
+    grid-area: freq;
+  }
+  .cust-table td[data-label='Monetary'] {
+    grid-area: mon;
+    border-radius: 0 10px 10px 0;
+  }
+
+  /* 지표 라벨 (RECENCY/FREQUENCY/MONETARY) */
+  .cust-table td[data-label='Recency']::before,
+  .cust-table td[data-label='Frequency']::before,
+  .cust-table td[data-label='Monetary']::before {
+    content: attr(data-label);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
 }
